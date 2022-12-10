@@ -1,0 +1,54 @@
+/ {
+	chosen {
+		zephyr,display = &ssd1306_128x64;
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+		button0: button_0 {
+			gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
+		};
+	};
+};
+
+&i2c1 {
+	status = "okay";
+
+    clock-frequency = <I2C_BITRATE_STANDARD>;
+	sda-gpios = <&gpio0 14 GPIO_OPEN_DRAIN>;
+	scl-gpios = <&gpio0 15 GPIO_OPEN_DRAIN>;
+	pinctrl-0 = <&i2c1_default>;
+	pinctrl-names = "default";
+
+    ssd1306_128x64: ssd1306@3c {
+        compatible = "solomon,ssd1306fb";
+        reg = <0x3c>;
+        width = <128>;
+        height = <64>;
+        segment-offset = <0>;
+		page-offset = <0>;
+		display-offset = <0>;
+		multiplex-ratio = <63>;
+		segment-remap;
+		com-invdir;
+		prechargep = <0x22>;
+    };
+};
+
+&wifi {
+	status = "okay";
+};
+
+&pinctrl {
+
+	i2c1_default: i2c1_default {
+		group1 {
+			pinmux = <I2C1_SDA_GPIO14>,
+					 <I2C1_SCL_GPIO15>;
+			bias-pull-up;
+			drive-open-drain;
+			output-high;
+		};
+	};
+
+};
